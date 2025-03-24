@@ -15,8 +15,14 @@ import {
   Tooltip,
   Switch,
 } from "@mui/material";
-import { Refresh, Add, Remove, ContentCopy, CheckCircle } from "@mui/icons-material";
-import background from '../assets/background.jpg';
+import {
+  Refresh,
+  Add,
+  Remove,
+  ContentCopy,
+  CheckCircle,
+} from "@mui/icons-material";
+import background from "../assets/background.jpg";
 
 // Interface for the FastAPI response
 interface PasswordResponse {
@@ -35,19 +41,22 @@ const Home: NextPage = () => {
   const [copied, setCopied] = useState<boolean>(false);
   const [displayedPassword, setDisplayedPassword] = useState<string>(""); // For typing effect
 
-
-  const getEstimatedCrackTime = (length: number): string => {
-    if (length > 14) return "Centuries";
-    if (length === 14) return "10 years";
-    if (length === 13) return "3 years";
-    if (length >= 11) return "4 months";  // Applies for 11-12 characters
-    if (length === 10) return "12 days";
-    if (length === 9) return "1 day";
-    if (length === 8 || length === 7) return "17 minutes";
-    if (length < 7) return "in minutes";
-    return "Unknown";
+  const getEstimatedCrackTime = (
+    length: number
+  ): { text: string; color: string } => {
+    if (length > 14) return { text: "Centuries", color: "green" };
+    if (length === 14) return { text: "10 years", color: "green" };
+    if (length === 13) return { text: "3 years", color: "green" };
+    if (length >= 11) return { text: "4 months", color: "orange" };
+    if (length === 10) return { text: "12 days", color: "orange" };
+    if (length === 9) return { text: "1 day", color: "red" };
+    if (length === 8 || length === 7)
+      return { text: "17 minutes", color: "red" };
+    if (length < 7) return { text: "In minutes", color: "red" };
+    return { text: "Unknown", color: "gray" };
   };
-
+  const { text: crackTimeText, color: crackTimeColor } =
+    getEstimatedCrackTime(length);
 
   // Helper function to ensure at least one option remains selected
   const toggleOption = (
@@ -81,7 +90,6 @@ const Home: NextPage = () => {
         break;
       case "numbers":
         setUseNumbers(!useNumbers);
-        break;
       case "symbols":
         setUseSymbols(!useSymbols);
         break;
@@ -162,7 +170,7 @@ const Home: NextPage = () => {
           use_numbers: useNumbers,
           use_symbols: useSymbols,
         }
-      );      
+      );
       setPassword(response.data.password);
       setPasswordStrength(getPasswordStrength(response.data.password));
     } catch (error) {
@@ -223,188 +231,189 @@ const Home: NextPage = () => {
   };
 
   return (
-    
     <Box
-    sx={{
-      backgroundImage: `url(${background.src})`,
-      backgroundColor: "rgb(25,39,51)",
-      height: "96vh",         // Fixed height to match the viewport
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      p:1 
-    }}
-  >
-    <Container maxWidth="md">
-    {/* Heading */}
-          <Box textAlign="center" mb={4}>
-            <Typography variant="h4" fontWeight="bold" gutterBottom color="white">
-              Random Password Generator
-            </Typography>
-          </Box>
-    
-          {/* Main Box with password display */}
-          <Box
-            sx={{
-              backgroundColor: "#fff",
-              borderRadius: 2,
-              boxShadow: 3,
-              p: 4,
-              mb: 4,
-            }}
-          >
-            <Grid container spacing={2} alignItems="center">
-              {/* Password display and refresh icon */}
-              <Grid item xs={9}>
-                <Box
-                  sx={{
-                    backgroundColor: "#f4f4f4",
-                    borderRadius: 2,
-                    p: 2,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    minHeight: "3em", // Ensures a consistent height
-                  }}
-                >
-                  <Typography
-                    variant="body1"
-                    sx={{ fontFamily: "monospace", wordWrap: "break-word" }}
-                  >
-                    {displayedPassword}
-                  </Typography>
-                  {/* Wrap the chip and refresh icon in a flex container */}
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Chip
-                      label={`${passwordStrength}`}
-                      color={getStrengthChipColor(passwordStrength)}
-                      variant="filled"
-                      sx={{ fontWeight: "bold", mr: 1 }}
-                    />
-                    <Tooltip title="Refresh password">
-                      <IconButton onClick={fetchPassword}>
-                        <Refresh />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-                </Box>
-              </Grid>
-    
-              {/* Copy button */}
-              <Grid item>
-  <Box textAlign="center">
-    <Button
-      variant="outlined"
-      color="primary"
-      startIcon={copied ? <CheckCircle /> : <ContentCopy />}
-      onClick={copyToClipboard}
-      sx={{ px: 4, py: 1.5, borderRadius: 10 }}
-    >
-      {copied ? "Copied" : "Copy"}
-    </Button>
-  </Box>
-</Grid>
-            </Grid>
-          </Box>
-    
-          {/* Password length controls */}
-          <Box
-            sx={{
-              backgroundColor: "#fff",
-              borderRadius: 2,
-              boxShadow: 3,
-              p: 4,
-              mb: 4,
-            }}
-          >
-            <Typography variant="subtitle1" fontWeight="medium" mb={1}>
-              Password length: {length}
-            </Typography>
-            <Box display="flex" alignItems="center" gap={2}>
-              <IconButton
-                onClick={() => setLength((prev) => Math.max(1, prev - 1))}
-                color="primary"
-              >
-                <Remove />
-              </IconButton>
-              <Slider
-                min={1}
-                max={30}
-                value={length}
-                onChange={handleSliderChange}
-                sx={{ flex: 1 }}
-              />
-              <IconButton
-                onClick={() => setLength((prev) => Math.min(30, prev + 1))}
-                color="primary"
-              >
-                <Add />
-              </IconButton>
-            </Box>
-          </Box>
-    
-          {/* Character sets */}
-          <Box
-            sx={{
-              backgroundColor: "#fff",
-              borderRadius: 2,
-              boxShadow: 3,
-              p: 4,
-              mb: 4,
-            }}
-          >
-            <Typography variant="subtitle1" fontWeight="medium" mb={2}>
-              Characters used:
-            </Typography>
-            <FormGroup row sx={{ justifyContent: "center" }}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={useUppercase}
-                    onChange={() => toggleOption("uppercase")}
-                  />
-                }
-                label="ABC"
-              />
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={useLowercase}
-                    onChange={() => toggleOption("lowercase")}
-                  />
-                }
-                label="abc"
-              />
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={useNumbers}
-                    onChange={() => toggleOption("numbers")}
-                  />
-                }
-                label="123"
-              />
-           <FormControlLabel
-  control={
-    <Switch
       sx={{
-        color: "black",
-        "&.Mui-checked": {
-          color: "black",
-        },
-        "& .MuiSwitch-track": {
-          backgroundColor: "black",
-        },
+        backgroundImage: `url(${background.src})`,
+        backgroundColor: "rgb(25,39,51)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        height: "96vh", // Fixed height to match the viewport
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        p: 1,
       }}
-      checked={useSymbols}
-      onChange={() => toggleOption("symbols")}
-    />
-  }
-  label="#$&"
-/>
-            </FormGroup>
+    >
+      <Container maxWidth="md">
+        {/* Heading */}
+        <Box textAlign="center" mb={4}>
+          <Typography variant="h4" fontWeight="bold" gutterBottom color="white">
+            Random Password Generator
+          </Typography>
+        </Box>
+
+        {/* Main Box with password display */}
+        <Box
+          sx={{
+            backgroundColor: "#fff",
+            borderRadius: 2,
+            boxShadow: 3,
+            p: 4,
+            mb: 4,
+          }}
+        >
+          <Grid container spacing={2} alignItems="center">
+            {/* Password display and refresh icon */}
+            <Grid item xs={9}>
+              <Box
+                sx={{
+                  backgroundColor: "#f4f4f4",
+                  borderRadius: 2,
+                  p: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  minHeight: "3em", // Ensures a consistent height
+                }}
+              >
+                <Typography
+                  variant="body1"
+                  sx={{ fontFamily: "monospace", wordWrap: "break-word" }}
+                >
+                  {displayedPassword}
+                </Typography>
+                {/* Wrap the chip and refresh icon in a flex container */}
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Chip
+                    label={`${passwordStrength}`}
+                    color={getStrengthChipColor(passwordStrength)}
+                    variant="filled"
+                    sx={{ fontWeight: "bold", mr: 1 }}
+                  />
+                  <Tooltip title="Refresh password">
+                    <IconButton onClick={fetchPassword}>
+                      <Refresh />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </Box>
+            </Grid>
+
+            {/* Copy button */}
+            <Grid item>
+              <Box textAlign="center">
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  startIcon={copied ? <CheckCircle /> : <ContentCopy />}
+                  onClick={copyToClipboard}
+                  sx={{ px: 4, py: 1.5, borderRadius: 10 }}
+                >
+                  {copied ? "Copied" : "Copy"}
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
+
+        {/* Password length controls */}
+        <Box
+          sx={{
+            backgroundColor: "#fff",
+            borderRadius: 2,
+            boxShadow: 3,
+            p: 4,
+            mb: 4,
+          }}
+        >
+          <Typography variant="subtitle1" fontWeight="medium" mb={1}>
+            Password length: {length}
+          </Typography>
+          <Box display="flex" alignItems="center" gap={2}>
+            <IconButton
+              onClick={() => setLength((prev) => Math.max(1, prev - 1))}
+              color="primary"
+            >
+              <Remove />
+            </IconButton>
+            <Slider
+              min={1}
+              max={30}
+              value={length}
+              onChange={handleSliderChange}
+              sx={{ flex: 1 }}
+            />
+            <IconButton
+              onClick={() => setLength((prev) => Math.min(30, prev + 1))}
+              color="primary"
+            >
+              <Add />
+            </IconButton>
           </Box>
-          <Box
+        </Box>
+
+        {/* Character sets */}
+        <Box
+          sx={{
+            backgroundColor: "#fff",
+            borderRadius: 2,
+            boxShadow: 3,
+            p: 4,
+            mb: 4,
+          }}
+        >
+          <Typography variant="subtitle1" fontWeight="medium" mb={2}>
+            Characters used:
+          </Typography>
+          <FormGroup row sx={{ justifyContent: "center" }}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={useUppercase}
+                  onChange={() => toggleOption("uppercase")}
+                />
+              }
+              label="ABC"
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={useLowercase}
+                  onChange={() => toggleOption("lowercase")}
+                />
+              }
+              label="abc"
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={useNumbers}
+                  onChange={() => toggleOption("numbers")}
+                />
+              }
+              label="123"
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  sx={{
+                    color: "black",
+                    "&.Mui-checked": {
+                      color: "black",
+                    },
+                    "& .MuiSwitch-track": {
+                      backgroundColor: "black",
+                    },
+                  }}
+                  checked={useSymbols}
+                  onChange={() => toggleOption("symbols")}
+                />
+              }
+              label="#$&"
+            />
+          </FormGroup>
+        </Box>
+        <Box
           sx={{
             backgroundColor: "#fff",
             borderRadius: 2,
@@ -412,16 +421,15 @@ const Home: NextPage = () => {
             p: 4,
           }}
         >
-          <Typography variant="subtitle1" fontWeight="medium" mb={1}>
+          <Typography fontWeight="medium" mb={1}>
             Estimated time to crack:
           </Typography>
-          <Typography variant="h6" color="text.secondary">
-            {getEstimatedCrackTime(length)}
+          <Typography variant="subtitle1" sx={{ color: crackTimeColor }}>
+            {crackTimeText}
           </Typography>
         </Box>
-        </Container>
-        
-      </Box>
+      </Container>
+    </Box>
   );
 };
 
