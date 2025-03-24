@@ -16,6 +16,7 @@ import {
   Switch,
 } from "@mui/material";
 import { Refresh, Add, Remove, ContentCopy, CheckCircle } from "@mui/icons-material";
+import background from '../assets/background.jpg';
 
 // Interface for the FastAPI response
 interface PasswordResponse {
@@ -153,7 +154,7 @@ const Home: NextPage = () => {
   const fetchPassword = async () => {
     try {
       const response = await axios.post<PasswordResponse>(
-        "http://127.0.0.1:8000/generate-password",
+        `${process.env.NEXT_PUBLIC_API_URL}/generate-password`,
         {
           length,
           use_uppercase: useUppercase,
@@ -161,7 +162,7 @@ const Home: NextPage = () => {
           use_numbers: useNumbers,
           use_symbols: useSymbols,
         }
-      );
+      );      
       setPassword(response.data.password);
       setPasswordStrength(getPasswordStrength(response.data.password));
     } catch (error) {
@@ -225,6 +226,7 @@ const Home: NextPage = () => {
     
     <Box
     sx={{
+      backgroundImage: `url(${background.src})`,
       backgroundColor: "rgb(25,39,51)",
       height: "96vh",         // Fixed height to match the viewport
       display: "flex",
