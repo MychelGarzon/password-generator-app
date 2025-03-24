@@ -39,7 +39,7 @@ const Home: NextPage = () => {
   const [password, setPassword] = useState<string>("");
   const [passwordStrength, setPasswordStrength] = useState<string>("Very Weak");
   const [copied, setCopied] = useState<boolean>(false);
-  const [displayedPassword, setDisplayedPassword] = useState<string>(""); // For typing effect
+  const [displayedPassword, setDisplayedPassword] = useState<string>(""); 
 
   const getEstimatedCrackTime = (
     length: number
@@ -216,7 +216,6 @@ const Home: NextPage = () => {
   // Initial load
   useEffect(() => {
     fetchPassword();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Automatically regenerate when options change
@@ -232,22 +231,23 @@ const Home: NextPage = () => {
 
   return (
     <Box
-      sx={{
-        backgroundImage: `url(${background.src})`,
-        backgroundColor: "rgb(25,39,51)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        height: "96vh", // Fixed height to match the viewport
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        p: 1,
-      }}
-    >
+    sx={{
+      backgroundImage: `url(${background.src})`,
+      backgroundColor: "rgb(25,39,51)",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      minHeight: "100vh", // ✅ This ensures it covers the full screen height
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      p: 1,
+    }}
+  >
+  
       <Container maxWidth="md">
         {/* Heading */}
         <Box textAlign="center" mb={4}>
-          <Typography variant="h4" fontWeight="bold" gutterBottom color="white">
+          <Typography variant="h3" fontWeight="bold" gutterBottom color="white">
             Random Password Generator
           </Typography>
         </Box>
@@ -273,7 +273,7 @@ const Home: NextPage = () => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  minHeight: "3em", // Ensures a consistent height
+                  minHeight: "3em", 
                 }}
               >
                 <Typography
@@ -326,7 +326,7 @@ const Home: NextPage = () => {
             mb: 4,
           }}
         >
-          <Typography variant="subtitle1" fontWeight="medium" mb={1}>
+          <Typography variant="h6" fontWeight="medium" mb={1}>
             Password length: {length}
           </Typography>
           <Box display="flex" alignItems="center" gap={2}>
@@ -362,7 +362,7 @@ const Home: NextPage = () => {
             mb: 4,
           }}
         >
-          <Typography variant="subtitle1" fontWeight="medium" mb={2}>
+          <Typography variant="h6" fontWeight="medium" mb={2}>
             Characters used:
           </Typography>
           <FormGroup row sx={{ justifyContent: "center" }}>
@@ -421,10 +421,10 @@ const Home: NextPage = () => {
             p: 4,
           }}
         >
-          <Typography fontWeight="medium" mb={1}>
+          <Typography variant="h6" fontWeight="medium" mb={1}>
             Estimated time to crack:
           </Typography>
-          <Typography variant="subtitle1" sx={{ color: crackTimeColor }}>
+          <Typography variant="h4" sx={{ color: crackTimeColor }}>
             {crackTimeText}
           </Typography>
         </Box>

@@ -48,9 +48,6 @@ Frontend (Vercel): [https://secure-password-generator-app.vercel.app/](https://s
 ### 🔧 Backend (FastAPI)
 
 ```bash
-# Clone the repository
-git clone https://github.com/MychelGarzon/password-generator-app.git
-cd password-generator-app/backend
 
 # Create virtual environment
 python -m venv venv
