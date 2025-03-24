@@ -62,15 +62,8 @@ const Home: NextPage = () => {
   const toggleOption = (
     option: "uppercase" | "lowercase" | "numbers" | "symbols"
   ) => {
-    // Count how many options are currently selected
-    const countSelected = [
-      useUppercase,
-      useLowercase,
-      useNumbers,
-      useSymbols,
-    ].filter(Boolean).length;
-
-    // If the user is trying to uncheck the only remaining option, do nothing
+    const countSelected = [useUppercase, useLowercase, useNumbers, useSymbols].filter(Boolean).length;
+  
     if (
       (option === "uppercase" && useUppercase && countSelected === 1) ||
       (option === "lowercase" && useLowercase && countSelected === 1) ||
@@ -79,8 +72,7 @@ const Home: NextPage = () => {
     ) {
       return;
     }
-
-    // Toggle the appropriate state
+  
     switch (option) {
       case "uppercase":
         setUseUppercase(!useUppercase);
@@ -90,6 +82,7 @@ const Home: NextPage = () => {
         break;
       case "numbers":
         setUseNumbers(!useNumbers);
+        break; 
       case "symbols":
         setUseSymbols(!useSymbols);
         break;
@@ -97,6 +90,7 @@ const Home: NextPage = () => {
         break;
     }
   };
+  
 
   // Basic strength checker
   const getPasswordStrength = (pwd: string): string => {
